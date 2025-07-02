@@ -1,5 +1,5 @@
 server:
-  port: 9093
+  port: 9094
 
 spring:
   datasource:
@@ -7,6 +7,10 @@ spring:
     username: root
     password: Ranjeet@97
     driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    user:
+      name: admin
+      password: admin123
 
   jpa:
     hibernate:
