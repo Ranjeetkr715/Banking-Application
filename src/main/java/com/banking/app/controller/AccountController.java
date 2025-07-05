@@ -5,8 +5,10 @@ import com.banking.app.service.impl.AccountServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class AccountController {
     private AccountServiceImpl accountService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('WEATHER_WRITE')")
     @Operation(summary = "Create an account", description = "Creates a new bank account")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto){
         AccountDto addAccount = accountService.addAccount(accountDto);
@@ -28,6 +31,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('WEATHER_READ')")
     @Operation(summary = "Get account details", description = "Fetch account details by ID")
     public ResponseEntity<AccountDto> getAccountDetailById(@PathVariable Long id){
         AccountDto accountById = accountService.getAccountById(id);
@@ -65,6 +69,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('WEATHER_DELETE')")
     @Operation(summary = "Delete account", description = "Delete an account by ID")
     public ResponseEntity<String> deleteAccountById(@PathVariable Long id){
         accountService.deleteAccountByID(id);
