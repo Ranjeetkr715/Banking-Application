@@ -7,6 +7,9 @@ import com.banking.app.mapper.AccountMapper;
 import com.banking.app.repository.AccountRepository;
 import com.banking.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Cacheable(value = "Account",key = "#id")
     public AccountDto getAccountById(Long id) {
         Account account_detail = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountException("Account does not exist"));
@@ -68,14 +72,17 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public void updateAccount(Long id , AccountDto accountDto) {
+    @CachePut(value = "Account",key = "#id")
+    public AccountDto updateAccount(Long id , AccountDto accountDto) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountException("Account does not exists"));
          account.setAccount_holder_name(accountDto.getAccount_holder_name());
          account.setSalary(accountDto.getSalary());
          accountRepository.save(account);
+         return AccountMapper.mapToAccountDto(account);
     }
 
     @Override
+    @CacheEvict(value = "Account",key = "#id")
     public void deleteAccountByID(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountException("Account does not exists"));
         accountRepository.delete(account);

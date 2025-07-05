@@ -17,7 +17,7 @@ public interface AccountService {
 
     AccountDto creditBalance(Long id , Double amount);
 
-    public void  updateAccount(Long id , AccountDto accountDto);
+    public AccountDto  updateAccount(Long id , AccountDto accountDto);
 
     public void deleteAccountByID(Long id);
 
